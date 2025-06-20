@@ -1935,58 +1935,79 @@ function addSentenceFeedback(transcript, currentWord) {
     const sentenceFeedbackContainer = document.createElement('div');
     sentenceFeedbackContainer.className = 'sentence-feedback';
     
-    // 分析句子中的單詞
-    const targetWords = targetSentence.toLowerCase()
+    // 分析句子中的單詞 - 以使用者說的話為主
+    const spokenWords = transcript.toLowerCase()
         .replace(/[.,!?;]/g, '') // 移除標點符號
         .split(/\s+/)
         .filter(word => word.length > 0);
     
-    const spokenWords = transcript.toLowerCase()
+    const targetWords = targetSentence.toLowerCase()
         .replace(/[.,!?;]/g, '')
         .split(/\s+/)
         .filter(word => word.length > 0);
     
+    console.log('使用者說的單詞:', spokenWords);
     console.log('目標句子單詞:', targetWords);
-    console.log('識別的單詞:', spokenWords);
     
     // 創建標題
     const feedbackTitle = document.createElement('div');
     feedbackTitle.className = 'feedback-title';
-    feedbackTitle.textContent = '單詞發音分析：';
+    feedbackTitle.textContent = '您說的單詞發音分析：';
     sentenceFeedbackContainer.appendChild(feedbackTitle);
     
     // 創建單詞反饋容器
     const wordsContainer = document.createElement('div');
     wordsContainer.className = 'words-feedback-container';
     
-    // 分析每個單詞的匹配度
-    targetWords.forEach((targetWord, index) => {
+    // 分析使用者說的每個單詞的準確度
+    spokenWords.forEach((spokenWord, index) => {
         const wordSpan = document.createElement('span');
         wordSpan.className = 'word-feedback-item';
-        wordSpan.textContent = targetWord;
+        wordSpan.textContent = spokenWord;
         
-        // 計算此單詞的匹配度
+        // 計算此單詞與目標句子中最相似單詞的匹配度
         let bestMatch = 0;
-        let matchedSpokenWord = '';
+        let matchedTargetWord = '';
+        let isCorrectPosition = false;
         
-        spokenWords.forEach(spokenWord => {
-            const similarity = calculateWordSimilarity(targetWord, spokenWord);
+        // 檢查是否在正確位置
+        if (index < targetWords.length) {
+            const positionMatch = calculateWordSimilarity(spokenWord, targetWords[index]);
+            if (positionMatch > bestMatch) {
+                bestMatch = positionMatch;
+                matchedTargetWord = targetWords[index];
+                isCorrectPosition = true;
+            }
+        }
+        
+        // 檢查與所有目標單詞的相似度
+        targetWords.forEach(targetWord => {
+            const similarity = calculateWordSimilarity(spokenWord, targetWord);
             if (similarity > bestMatch) {
                 bestMatch = similarity;
-                matchedSpokenWord = spokenWord;
+                matchedTargetWord = targetWord;
+                isCorrectPosition = false;
             }
         });
         
-        // 根據匹配度設定樣式
+        // 根據匹配度和位置設定樣式和提示
         if (bestMatch >= 0.8) {
-            wordSpan.classList.add('correct');
-            wordSpan.title = `正確！(識別為: ${matchedSpokenWord})`;
+            if (isCorrectPosition) {
+                wordSpan.classList.add('correct');
+                wordSpan.title = `完全正確！位置和發音都對 (目標: ${matchedTargetWord})`;
+            } else {
+                wordSpan.classList.add('partial');
+                wordSpan.title = `發音正確但位置不對 (對應目標: ${matchedTargetWord})`;
+            }
         } else if (bestMatch >= 0.5) {
             wordSpan.classList.add('partial');
-            wordSpan.title = `部分正確 (識別為: ${matchedSpokenWord})`;
+            wordSpan.title = `發音部分正確 (最接近目標: ${matchedTargetWord})`;
+        } else if (bestMatch > 0.2) {
+            wordSpan.classList.add('incorrect');
+            wordSpan.title = `發音需要改進 (可能想說: ${matchedTargetWord})`;
         } else {
             wordSpan.classList.add('incorrect');
-            wordSpan.title = bestMatch > 0 ? `需要改進 (識別為: ${matchedSpokenWord})` : '未識別到此單詞';
+            wordSpan.title = '此單詞在目標句子中找不到對應';
         }
         
         // 添加動畫延遲
@@ -2004,6 +2025,15 @@ function addSentenceFeedback(transcript, currentWord) {
     
     sentenceFeedbackContainer.appendChild(wordsContainer);
     
+    // 添加目標句子參考
+    const referenceContainer = document.createElement('div');
+    referenceContainer.className = 'reference-sentence';
+    referenceContainer.innerHTML = `
+        <div class="reference-title">目標句子：</div>
+        <div class="reference-text">${targetSentence}</div>
+    `;
+    sentenceFeedbackContainer.appendChild(referenceContainer);
+    
     // 移除舊的反饋
     const oldSentenceFeedback = document.querySelector('.sentence-feedback');
     if (oldSentenceFeedback) {
@@ -2012,6 +2042,7 @@ function addSentenceFeedback(transcript, currentWord) {
     
     document.querySelector('.speech-feedback').appendChild(sentenceFeedbackContainer);
 }
+
 
 function calculateWordSimilarity(word1, word2) {
     if (word1 === word2) return 1.0;
