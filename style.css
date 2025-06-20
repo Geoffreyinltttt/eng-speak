@@ -864,6 +864,24 @@ body {
     transform: scale(1.05);
     border-color: #059669;
     box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    position: relative;
+}
+
+.word-feedback-item.correct::before {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 10px;
+    background: white;
+    color: #059669;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
 }
 
 .word-feedback-item.incorrect {
@@ -931,6 +949,44 @@ body {
     .sentence-feedback {
         padding: 8px;
         margin-top: 12px;
+    }
+}
+
+/* ===== 參考句子樣式 ===== */
+.reference-sentence {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+    border-radius: 8px;
+    border-left: 4px solid #0288d1;
+}
+
+.reference-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #01579b;
+    margin-bottom: 4px;
+}
+
+.reference-text {
+    font-size: 13px;
+    color: #0277bd;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+@media screen and (max-width: 375px) {
+    .reference-sentence {
+        margin-top: 8px;
+        padding: 6px 8px;
+    }
+    
+    .reference-title {
+        font-size: 11px;
+    }
+    
+    .reference-text {
+        font-size: 12px;
     }
 }
 
