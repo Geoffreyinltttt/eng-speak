@@ -1481,6 +1481,25 @@ function showSpeechRecognitionModal() {
     
     targetDisplay.textContent = targetText;
     
+	// 如果是例句卡片，添加提示文字
+if (currentCard >= 2) {
+    const hintText = document.createElement('div');
+    hintText.className = 'target-hint';
+    hintText.textContent = '請讀出整個句子，系統會分析每個單詞的發音';
+    hintText.style.fontSize = '14px';
+    hintText.style.color = '#6b7280';
+    hintText.style.marginTop = '8px';
+    hintText.style.textAlign = 'center';
+    
+    // 移除舊的提示
+    const oldHint = document.querySelector('.target-hint');
+    if (oldHint) {
+        oldHint.remove();
+    }
+    
+    targetDisplay.parentNode.insertBefore(hintText, targetDisplay.nextSibling);
+}
+
     createWaveform();
     
     modal.style.display = 'block';
