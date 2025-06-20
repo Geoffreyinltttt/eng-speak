@@ -599,6 +599,8 @@ body {
     max-width: 320px;
     padding: 24px;
     text-align: center;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .speech-close {
