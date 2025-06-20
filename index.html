@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>單字卡學習</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="tv-container">
+        <!-- 標題區域 -->
+        <div class="header">
+            <h1>L01 Say Hello to Your Future</h1>
+            <div class="button-group">
+                <a href="https://sites.google.com/view/main-unit-6-lt/%E9%A6%96%E9%A0%81" class="header-btn home-btn" target="_blank">🏠</a>
+                <button class="header-btn guide-btn" onclick="showGuide()">💡</button>
+            </div>
+        </div>
+
+        <!-- 單字卡螢幕 -->
+        <div class="tv-screen">
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <!-- 卡片1: 單字 -->
+                    <div class="card" id="card1">
+                        <div class="word" id="wordDisplay"></div>
+                    </div>
+                    
+                    <!-- 卡片2: 單字+意思 -->
+                    <div class="card back" id="card2">
+                        <div class="word" id="wordBack"></div>
+                        <div class="meaning" id="meaningDisplay"></div>
+                    </div>
+                    
+                    <!-- 卡片3: 例句1 -->
+                    <div class="card back" id="card3">
+                        <div class="example-container">
+                            <div class="image-container" id="imageContainer">
+                                圖片預留區
+                            </div>
+                            <div class="example-text">
+                                <div class="example" id="exampleDisplay"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 卡片4: 例句2 -->
+                    <div class="card back" id="card4">
+                        <div class="example-container">
+                            <div class="image-container" id="imageContainer2">
+                                圖片預留區
+                            </div>
+                            <div class="example-text">
+                                <div class="example" id="exampleDisplay2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片指示器 -->
+            <div class="card-indicators">
+                <span class="indicator active"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+            </div>
+        </div>
+
+        <!-- 控制按鈕 -->
+        <div class="tv-controls">
+            <div class="controls-row">
+                <button class="tv-button" id="prevWord">◀</button>
+                <div class="category-buttons">
+                    <button class="category-btn active" data-category="words">單字</button>
+                    <button class="category-btn" data-category="idioms">片語</button>
+                </div>
+                <button class="tv-button" id="nextWord">▶</button>
+            </div>
+            <div class="controls-row">
+                <button class="tv-button list" id="wordListBtn">單字列表</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 單字列表 Modal -->
+    <div id="wordListModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>單字列表</h2>
+            <ul id="wordListItems"></ul>
+        </div>
+    </div>
+
+    <!-- 使用導覽 Modal -->
+    <div id="guideModal" class="modal guide-modal">
+        <div class="modal-content guide-content">
+            <div class="guide-header">
+                <h2>使用導覽</h2>
+                <span class="close-guide" onclick="hideGuide()">&times;</span>
+            </div>
+            <div class="guide-body">
+                <div class="guide-item">
+                    <span class="guide-icon">👆</span>
+                    <p>左右滑動切換單字卡面</p>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">🔄</span>
+                    <p>點擊箭頭按鈕切換單字</p>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">🔊</span>
+                    <p>自動播放單字發音</p>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">📝</span>
+                    <p>可切換單字、片語類別</p>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">🎤</span>
+                    <p>點擊麥克風圖示練習發音</p>
+                </div>
+            </div>
+            <button class="guide-close-btn" onclick="hideGuide()">知道了！</button>
+        </div>
+    </div>
+    
+    <!-- 語音識別 Modal -->
+    <div id="speechRecognitionModal" class="modal">
+        <div class="modal-content speech-modal-content">
+            <span class="close speech-close">&times;</span>
+            <h2>發音練習</h2>
+            <div class="speech-content">
+                <div class="target-word"></div>
+                <div class="speech-feedback">
+                    <div class="waveform-container">
+                        <div class="waveform"></div>
+                    </div>
+                    <div class="recognition-result"></div>
+                    <div class="accuracy-score"></div>
+                </div>
+                <button class="speech-btn" id="recordButton">
+                    <span class="record-icon">🎤</span>
+                    <span class="record-text">點擊開始錄音</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

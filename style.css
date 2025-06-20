@@ -1,0 +1,934 @@
+/* ===== 基礎樣式 ===== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+}
+
+/* ===== 主容器 ===== */
+.tv-container {
+    width: 375px;
+    height: 700px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.08),
+        0 0 0 1px rgba(0,0,0,0.04);
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.tv-screen {
+    width: 100%;
+    height: 460px;
+    background: #f8fafc;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.05),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+/* ===== 標題區域 ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    position: relative;
+    padding: 0 4px;
+    min-height: 32px;
+}
+
+.header h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 16px;
+    color: #1a1a1a;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+}
+
+.button-group {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+}
+
+.header-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.header-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ===== 單字卡容器 ===== */
+.flashcard-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    perspective: 1500px;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.flashcard.flip-right,
+.flashcard.flip-left {
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===== 卡片樣式 ===== */
+.card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.05),
+        0 10px 15px rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgba(79, 70, 229, 0.1);
+    background: linear-gradient(
+        to bottom right,
+        #ffffff 0%,
+        #fafaff 100%
+    );
+}
+
+.card.back {
+    transform: rotateY(180deg);
+}
+
+.card:nth-child(1) {
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.card:nth-child(2) {
+    border-color: rgba(79, 70, 229, 0.4);
+}
+
+.card:nth-child(3) {
+    border-color: rgba(79, 70, 229, 0.5);
+}
+
+.card:nth-child(4) {
+    border-color: rgba(79, 70, 229, 0.6);
+}
+
+.flashcard:hover .card {
+    box-shadow: 
+        0 6px 8px rgba(0, 0, 0, 0.07),
+        0 12px 17px rgba(0, 0, 0, 0.12),
+        0 0 0 3px rgba(79, 70, 229, 0.15);
+    border: 2px solid #d1d5f0;
+    transition: all 0.3s ease;
+}
+
+/* ===== 單字內容樣式 ===== */
+.word {
+    font-size: clamp(24px, 5vw, 40px);
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a1a;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    line-height: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    transition: transform 0.3s ease;
+}
+
+.meaning {
+    font-size: clamp(18px, 4vw, 24px);
+    margin-top: 20px;
+    color: #1a1a1a;
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.4;
+}
+
+/* ===== 例句容器 ===== */
+.example-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.image-container {
+    width: 100%;
+    height: 35%;
+    min-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    background: #f4f4f5;
+    overflow: hidden;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.example-text {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px;
+}
+
+.example {
+    font-size: clamp(16px, 3.5vw, 18px);
+    line-height: 1.6;
+    color: #1a1a1a;
+    margin: 0 0 12px 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    text-align: justify;
+    hyphens: none;
+}
+
+.example span {
+    display: inline-block;
+    padding: 2px 4px;
+    margin: 0 -1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.example span.highlight {
+    background-color: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+    transform: scale(1.05);
+}
+
+.example span.highlight-word {
+    color: #4f46e5;
+    font-weight: 700;
+}
+
+/* ===== 翻譯容器 ===== */
+.translation-container {
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+    transition: all 0.3s ease-out;
+    cursor: pointer;
+    overflow: hidden;
+    min-height: 32px;
+}
+
+.translation-container:hover {
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0.08) 100%);
+}
+
+.translation {
+    display: none;
+    font-size: clamp(14px, 3vw, 16px);
+    text-align: left;
+    color: #4b5563;
+    line-height: 1.6;
+    padding: 12px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.translation-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+}
+
+.translation-arrow {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.5;
+    color: rgba(79, 70, 229, 0.7);
+    transition: all 0.3s;
+    animation: bounce-gentle 1.5s ease-in-out infinite;
+}
+
+.translation-container:hover .translation-arrow {
+    color: rgba(79, 70, 229, 1);
+    transform: translateY(4px);
+}
+
+.translation-container.show {
+    background-color: rgba(79, 70, 229, 0.08);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.translation-container.show .translation {
+    display: block;
+}
+
+.translation-container.show .translation-hint {
+    display: none;
+}
+
+/* ===== 音節樣式 ===== */
+.syllables-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 4px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.syllable {
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: clamp(20px, 4vw, 36px);
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
+    transition: color 0.3s, font-size 0.3s;
+}
+
+.syllable-separator {
+    margin: 0 2px;
+    color: #666;
+    font-size: clamp(16px, 3vw, 24px);
+}
+
+.syllable.highlight {
+    color: #4f46e5;
+    transform: scale(1.1);
+}
+
+/* ===== 卡片指示器 ===== */
+.card-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #e4e4e7;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.indicator.active {
+    background-color: #4f46e5;
+    transform: scale(1.2);
+}
+
+/* ===== 控制按鈕 ===== */
+.tv-controls {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 0 0 0;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.category-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f4f4f5;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.category-btn.active {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.tv-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    background-color: #4f46e5;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.tv-button:hover {
+    background-color: #4338ca;
+    transform: scale(1.05);
+}
+
+.tv-button.list {
+    background-color: #4f46e5;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 16px;
+    font-size: 16px;
+    height: 56px;
+    font-weight: 600;
+}
+
+/* ===== Modal 通用樣式 ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 24px;
+    border: none;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+}
+
+.close {
+    color: #666;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+/* ===== 單字列表 Modal ===== */
+#wordListItems {
+    list-style-type: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#wordListItems li {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f4f4f5;
+    color: #1a1a1a;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+#wordListItems li:last-child {
+    border-bottom: none;
+}
+
+#wordListItems li:hover {
+    background-color: #f4f4f5;
+    padding-left: 20px;
+}
+
+/* ===== 導覽 Modal ===== */
+.guide-modal {
+    z-index: 2000;
+}
+
+.guide-content {
+    position: relative;
+    background-color: white;
+    margin: 15% auto;
+    padding: 24px;
+    width: 80%;
+    max-width: 320px;
+    border-radius: 16px;
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.guide-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #1a1a1a;
+}
+
+.close-guide {
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.guide-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.guide-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.guide-item p {
+    margin: 0;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.guide-close-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.guide-close-btn:hover {
+    background-color: #4338ca;
+}
+
+/* ===== 語音識別 Modal ===== */
+.speech-modal-content {
+    max-width: 320px;
+    padding: 24px;
+    text-align: center;
+}
+
+.speech-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.target-word {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.speech-feedback {
+    margin-bottom: 20px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.waveform-container {
+    width: 100%;
+    height: 60px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.waveform {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.wave-bar {
+    width: 4px;
+    height: 5px;
+    background: linear-gradient(to top, #4f46e5, #7c3aed);
+    border-radius: 2px;
+    transition: height 0.05s ease-out;
+}
+
+.waveform.active .wave-bar:nth-child(odd) {
+    animation: wave-pulse 0.8s ease-in-out infinite;
+}
+
+.waveform.active .wave-bar:nth-child(even) {
+    animation: wave-pulse 0.8s ease-in-out infinite 0.1s;
+}
+
+.recognition-result {
+    font-size: 18px;
+    margin-bottom: 8px;
+    min-height: 27px;
+}
+
+.accuracy-score {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    min-height: 36px;
+}
+
+.accuracy-score.high {
+    color: #10b981;
+}
+
+.accuracy-score.medium {
+    color: #f59e0b;
+}
+
+.accuracy-score.low {
+    color: #ef4444;
+}
+
+.score-feedback {
+    font-size: 14px;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+.speech-btn {
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    background-color: #4f46e5;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.speech-btn:hover {
+    background-color: #4338ca;
+}
+
+.speech-btn:active {
+    transform: scale(0.98);
+}
+
+.speech-btn.recording {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    animation: recording-pulse 1.5s ease-in-out infinite;
+}
+
+.record-icon {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.record-text {
+    transition: all 0.2s ease;
+}
+
+/* ===== 語音練習按鈕 ===== */
+.speech-icon {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4f46e5;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.speech-icon:hover {
+    background-color: #4338ca;
+    transform: scale(1.05);
+}
+
+/* ===== 音節反饋 ===== */
+.syllable-feedback {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 12px;
+}
+
+.syllable-item {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.syllable-item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.3;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.syllable-item.correct {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    font-weight: 600;
+    transform: scale(1.05);
+}
+
+.syllable-item.incorrect {
+    background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+    color: white;
+    animation: shake 0.3s ease-in-out;
+}
+
+.syllable-item.partial {
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    color: white;
+}
+
+/* ===== 波紋效果 ===== */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+}
+
+/* ===== 滾動條樣式 ===== */
+.example-text::-webkit-scrollbar {
+    width: 4px;
+}
+
+.example-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.example-text::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+}
+
+.example-text::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ===== 動畫定義 ===== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes flipRight {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(-180deg); }
+}
+
+@keyframes flipLeft {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(180deg); }
+}
+
+@keyframes bounce-gentle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes wave-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes recording-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ===== 工具類別 ===== */
+.auto-scale {
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.smooth-transition {
+    transition: all 0.3s ease;
+}
+
+/* ===== 響應式設計 ===== */
+@media screen and (max-width: 375px) {
+    .tv-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        padding: 16px;
+    }
+    
+    .word {
+        font-size: clamp(20px, 4.5vw, 32px);
+        padding: 0 12px;
+    }
+    
+    .syllable {
+        font-size: clamp(18px, 3.5vw, 28px);
+        padding: 1px 2px;
+    }
+    
+    .category-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .tv-button {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+}
