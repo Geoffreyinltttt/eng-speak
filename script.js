@@ -1820,72 +1820,218 @@ function calculateComprehensiveScore(recognized, target, confidence) {
 }
 
 function addSyllableFeedback(transcript) {
-    if (currentCard === 1 && vocabularyData[currentCategory][currentWordIndex].syllables) {
-        const syllablesContainer = document.createElement('div');
-        syllablesContainer.className = 'syllable-feedback';
-        
-        const syllables = vocabularyData[currentCategory][currentWordIndex].syllables;
-        const pronunciationGuide = vocabularyData[currentCategory][currentWordIndex].pronunciationGuide || [];
-        
-        const transcriptLower = transcript.toLowerCase();
-        let matchResults = [];
-        
-        syllables.forEach((syllable, index) => {
-            const syllableLower = syllable.toLowerCase();
-            let matchScore = 0;
-            
-            if (transcriptLower.includes(syllableLower)) {
-                matchScore = 1;
-            } else {
-                let matchCount = 0;
-                for (let i = 0; i < syllableLower.length; i++) {
-                    if (transcriptLower.includes(syllableLower[i])) {
-                        matchCount++;
-                    }
-                }
-                matchScore = matchCount / syllableLower.length;
-            }
-            
-            matchResults.push(matchScore);
-        });
-        
-        syllables.forEach((syllable, index) => {
-            const syllableSpan = document.createElement('span');
-            syllableSpan.className = 'syllable-item';
-            syllableSpan.textContent = syllable;
-            
-            const score = matchResults[index];
-            if (score >= 0.8) {
-                syllableSpan.classList.add('correct');
-            } else if (score >= 0.5) {
-                syllableSpan.classList.add('partial');
-            } else {
-                syllableSpan.classList.add('incorrect');
-            }
-            
-            if (pronunciationGuide[index]) {
-                syllableSpan.title = `[${pronunciationGuide[index]}]`;
-            }
-            
-            syllableSpan.style.animationDelay = `${index * 0.1}s`;
-            syllableSpan.style.opacity = '0';
-            
-            syllablesContainer.appendChild(syllableSpan);
-            
-            setTimeout(() => {
-                syllableSpan.style.opacity = '1';
-                syllableSpan.style.transform = 'scale(1)';
-            }, index * 100);
-        });
-        
-        const oldSyllableFeedback = document.querySelector('.syllable-feedback');
-        if (oldSyllableFeedback) {
-            oldSyllableFeedback.remove();
-        }
-        
-        document.querySelector('.speech-feedback').appendChild(syllablesContainer);
+    const currentWord = vocabularyData[currentCategory][currentWordIndex];
+    
+    // 為單字卡片添加音節反饋
+    if (currentCard === 1 && currentWord.syllables) {
+        addWordSyllableFeedback(transcript, currentWord);
+    } 
+    // 為例句卡片添加單詞級別反饋
+    else if (currentCard === 2 || currentCard === 3) {
+        addSentenceFeedback(transcript, currentWord);
     }
 }
+
+function addWordSyllableFeedback(transcript, currentWord) {
+    const syllablesContainer = document.createElement('div');
+    syllablesContainer.className = 'syllable-feedback';
+    
+    const syllables = currentWord.syllables;
+    const pronunciationGuide = currentWord.pronunciationGuide || [];
+    
+    const transcriptLower = transcript.toLowerCase();
+    let matchResults = [];
+    
+    syllables.forEach((syllable, index) => {
+        const syllableLower = syllable.toLowerCase();
+        let matchScore = 0;
+        
+        if (transcriptLower.includes(syllableLower)) {
+            matchScore = 1;
+        } else {
+            let matchCount = 0;
+            for (let i = 0; i < syllableLower.length; i++) {
+                if (transcriptLower.includes(syllableLower[i])) {
+                    matchCount++;
+                }
+            }
+            matchScore = matchCount / syllableLower.length;
+        }
+        
+        matchResults.push(matchScore);
+    });
+    
+    syllables.forEach((syllable, index) => {
+        const syllableSpan = document.createElement('span');
+        syllableSpan.className = 'syllable-item';
+        syllableSpan.textContent = syllable;
+        
+        const score = matchResults[index];
+        if (score >= 0.8) {
+            syllableSpan.classList.add('correct');
+        } else if (score >= 0.5) {
+            syllableSpan.classList.add('partial');
+        } else {
+            syllableSpan.classList.add('incorrect');
+        }
+        
+        if (pronunciationGuide[index]) {
+            syllableSpan.title = `[${pronunciationGuide[index]}]`;
+        }
+        
+        syllableSpan.style.animationDelay = `${index * 0.1}s`;
+        syllableSpan.style.opacity = '0';
+        
+        syllablesContainer.appendChild(syllableSpan);
+        
+        setTimeout(() => {
+            syllableSpan.style.opacity = '1';
+            syllableSpan.style.transform = 'scale(1)';
+        }, index * 100);
+    });
+    
+    const oldSyllableFeedback = document.querySelector('.syllable-feedback');
+    if (oldSyllableFeedback) {
+        oldSyllableFeedback.remove();
+    }
+    
+    document.querySelector('.speech-feedback').appendChild(syllablesContainer);
+}
+
+function addSentenceFeedback(transcript, currentWord) {
+    // 獲取目標例句
+    let targetSentence = '';
+    if (currentWord.examples && currentWord.examples.length > 0) {
+        const exampleIndex = currentCard === 2 ? 0 : 1;
+        if (currentWord.examples.length > exampleIndex) {
+            targetSentence = currentWord.examples[exampleIndex].sentence;
+        }
+    } else if (currentCard === 2 && currentWord.example) {
+        targetSentence = currentWord.example;
+    }
+    
+    if (!targetSentence) return;
+    
+    // 創建句子反饋容器
+    const sentenceFeedbackContainer = document.createElement('div');
+    sentenceFeedbackContainer.className = 'sentence-feedback';
+    
+    // 分析句子中的單詞
+    const targetWords = targetSentence.toLowerCase()
+        .replace(/[.,!?;]/g, '') // 移除標點符號
+        .split(/\s+/)
+        .filter(word => word.length > 0);
+    
+    const spokenWords = transcript.toLowerCase()
+        .replace(/[.,!?;]/g, '')
+        .split(/\s+/)
+        .filter(word => word.length > 0);
+    
+    console.log('目標句子單詞:', targetWords);
+    console.log('識別的單詞:', spokenWords);
+    
+    // 創建標題
+    const feedbackTitle = document.createElement('div');
+    feedbackTitle.className = 'feedback-title';
+    feedbackTitle.textContent = '單詞發音分析：';
+    sentenceFeedbackContainer.appendChild(feedbackTitle);
+    
+    // 創建單詞反饋容器
+    const wordsContainer = document.createElement('div');
+    wordsContainer.className = 'words-feedback-container';
+    
+    // 分析每個單詞的匹配度
+    targetWords.forEach((targetWord, index) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'word-feedback-item';
+        wordSpan.textContent = targetWord;
+        
+        // 計算此單詞的匹配度
+        let bestMatch = 0;
+        let matchedSpokenWord = '';
+        
+        spokenWords.forEach(spokenWord => {
+            const similarity = calculateWordSimilarity(targetWord, spokenWord);
+            if (similarity > bestMatch) {
+                bestMatch = similarity;
+                matchedSpokenWord = spokenWord;
+            }
+        });
+        
+        // 根據匹配度設定樣式
+        if (bestMatch >= 0.8) {
+            wordSpan.classList.add('correct');
+            wordSpan.title = `正確！(識別為: ${matchedSpokenWord})`;
+        } else if (bestMatch >= 0.5) {
+            wordSpan.classList.add('partial');
+            wordSpan.title = `部分正確 (識別為: ${matchedSpokenWord})`;
+        } else {
+            wordSpan.classList.add('incorrect');
+            wordSpan.title = bestMatch > 0 ? `需要改進 (識別為: ${matchedSpokenWord})` : '未識別到此單詞';
+        }
+        
+        // 添加動畫延遲
+        wordSpan.style.animationDelay = `${index * 0.1}s`;
+        wordSpan.style.opacity = '0';
+        
+        wordsContainer.appendChild(wordSpan);
+        
+        // 動畫顯示
+        setTimeout(() => {
+            wordSpan.style.opacity = '1';
+            wordSpan.style.transform = 'scale(1)';
+        }, index * 150);
+    });
+    
+    sentenceFeedbackContainer.appendChild(wordsContainer);
+    
+    // 移除舊的反饋
+    const oldSentenceFeedback = document.querySelector('.sentence-feedback');
+    if (oldSentenceFeedback) {
+        oldSentenceFeedback.remove();
+    }
+    
+    document.querySelector('.speech-feedback').appendChild(sentenceFeedbackContainer);
+}
+
+function calculateWordSimilarity(word1, word2) {
+    if (word1 === word2) return 1.0;
+    
+    const len1 = word1.length;
+    const len2 = word2.length;
+    const maxLen = Math.max(len1, len2);
+    
+    if (maxLen === 0) return 1.0;
+    
+    // 使用編輯距離算法
+    const matrix = [];
+    
+    for (let i = 0; i <= len1; i++) {
+        matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= len2; j++) {
+        matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            if (word1.charAt(i - 1) === word2.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j] + 1,    // 刪除
+                    matrix[i][j - 1] + 1,    // 插入
+                    matrix[i - 1][j - 1] + 1 // 替換
+                );
+            }
+        }
+    }
+    
+    const editDistance = matrix[len1][len2];
+    return 1 - (editDistance / maxLen);
+}
+
 
 function splitTranscriptBySyllables(transcript, syllables) {
     const result = [];
